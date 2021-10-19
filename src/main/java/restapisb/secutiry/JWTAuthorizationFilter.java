@@ -12,12 +12,16 @@ package restapisb.secutiry;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.Claims;
@@ -70,10 +74,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     @SuppressWarnings("unchecked")
     List<String> authorities = (List) claims.get("authorities");
 
-    // UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(),
-    // null,
-    // authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-    // SecurityContextHolder.getContext().setAuthentication(auth);
+    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(),
+        null,
+        authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+    SecurityContextHolder.getContext().setAuthentication(auth);
 
   }
 
